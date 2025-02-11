@@ -12,12 +12,23 @@ RUN apt-get update && \
     chown node:node /home/node/tmp && \
     chmod 777 /home/node/tmp
 
-# Ensure FFmpeg is in PATH
+# Debug: Print FFmpeg location and version
 RUN which ffmpeg && \
-    ln -sf $(which ffmpeg) /usr/local/bin/ffmpeg
+    ffmpeg -version && \
+    echo "FFmpeg installation verified"
+
+# Ensure FFmpeg is in PATH and accessible
+RUN ln -sf $(which ffmpeg) /usr/local/bin/ffmpeg && \
+    echo "PATH=$PATH" && \
+    ls -la /usr/local/bin/ffmpeg
 
 # Set environment variable for temp directory path
 ENV N8N_TEMP_DIR=/home/node/tmp
 
-# Switch back to node user
+# Debug: Verify permissions as node user
 USER node
+RUN ffmpeg -version || echo "Failed to run ffmpeg as node user"
+
+# Additional debug: Print PATH and check FFmpeg accessibility
+RUN echo "Current PATH: $PATH" && \
+    which ffmpeg || echo "ffmpeg not in PATH"
