@@ -24,6 +24,15 @@ RUN NODE_ENV=production DOCKER_BUILD=true pnpm --filter=n8n --prod --no-optional
 FROM n8nio/base:${NODE_VERSION}
 ENV NODE_ENV=production
 
+# Install FFmpeg and create temp directory
+RUN apt-get update && \
+    apt-get install -y ffmpeg && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/* && \
+    mkdir -p /home/node/tmp && \
+    chown node:node /home/node/tmp && \
+    chmod 777 /home/node/tmp
+
 ARG N8N_RELEASE_TYPE=dev
 ENV N8N_RELEASE_TYPE=${N8N_RELEASE_TYPE}
 
@@ -57,6 +66,9 @@ RUN \
 	ln -s /usr/local/lib/node_modules/n8n/bin/n8n /usr/local/bin/n8n && \
 	mkdir .n8n && \
 	chown node:node .n8n
+
+# Set environment variable for temp directory path
+ENV N8N_TEMP_DIR=/home/node/tmp
 
 ENV SHELL /bin/sh
 USER node
