@@ -3,11 +3,9 @@ FROM n8nio/n8n:latest
 # Switch to root to install packages
 USER root
 
-# Install FFmpeg and create temp directory
-RUN apt-get update && \
-    apt-get install -y ffmpeg && \
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists/* && \
+# Install FFmpeg using Alpine package manager
+RUN apk update && \
+    apk add --no-cache ffmpeg && \
     mkdir -p /home/node/tmp && \
     chown node:node /home/node/tmp && \
     chmod 777 /home/node/tmp
