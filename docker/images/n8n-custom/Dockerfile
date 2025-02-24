@@ -25,9 +25,6 @@ ENV N8N_HOST=api.thetunecanvas.com
 ENV WEBHOOK_URL=https://api.thetunecanvas.com/
 ENV N8N_ENFORCE_SETTINGS_FILE_PERMISSIONS=false
 
-# Switch to node user for security
-USER node
-
 # Debug: Verify setup
 RUN echo "Verifying directories and permissions:" && \
     ls -la /mnt/n8n || echo "Cannot access /mnt/n8n" && \
