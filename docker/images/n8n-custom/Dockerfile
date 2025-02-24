@@ -30,3 +30,6 @@ RUN ffmpeg -version || echo "Failed to run ffmpeg as node user"
 # Additional debug: Print PATH and check FFmpeg accessibility
 RUN echo "Current PATH: $PATH" && \
     which ffmpeg || echo "ffmpeg not in PATH"
+
+# Set the data directory to the persistent volume
+ENV N8N_USER_FOLDER=/home/node/.n8n
