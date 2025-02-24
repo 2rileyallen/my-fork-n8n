@@ -7,9 +7,8 @@ USER root
 RUN apk update && \
     apk add --no-cache ffmpeg
 
-# Create necessary directories and set permissions
-RUN mkdir -p /mnt/n8n/workflows && \
-    mkdir -p /mnt/n8n/temp && \
+# Create the base data directory and set permissions
+RUN mkdir -p /mnt/n8n && \
     chown -R node:node /mnt/n8n && \
     chmod -R 755 /mnt/n8n
 
@@ -17,8 +16,8 @@ RUN mkdir -p /mnt/n8n/workflows && \
 RUN ln -sf $(which ffmpeg) /usr/local/bin/ffmpeg
 
 # Set environment variables
-ENV N8N_DATA_FOLDER=/mnt/n8n/workflows
-ENV N8N_TEMP_DIR=/mnt/n8n/temp
+ENV N8N_DATA_FOLDER=/mnt/n8n  # Set to the base directory for N8N data
+ENV N8N_TEMP_DIR=/mnt/n8n/temp  # Temporary directory for N8N
 ENV PORT=5678
 ENV N8N_PROTOCOL=https
 ENV N8N_HOST=api.thetunecanvas.com
@@ -27,6 +26,5 @@ ENV N8N_ENFORCE_SETTINGS_FILE_PERMISSIONS=false
 
 # Debug: Verify setup
 RUN echo "Verifying directories and permissions:" && \
-    ls -la /mnt/n8n || echo "Cannot access /mnt/n8n" && \
-    ls -la /mnt/n8n/workflows || echo "Cannot access workflows directory" && \
-    ls -la /mnt/n8n/temp || echo "Cannot access temp directory"
+    ls -la /mnt/n8n || echo "Cannot access /mnt/n8n"
+		
