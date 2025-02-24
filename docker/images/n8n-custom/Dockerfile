@@ -10,6 +10,11 @@ RUN apk update && \
     chown node:node /home/node/tmp && \
     chmod 777 /home/node/tmp
 
+# Create and set permissions for .n8n directory
+RUN mkdir -p /home/node/.n8n && \
+    chown -R node:node /home/node/.n8n && \
+    chmod -R 700 /home/node/.n8n
+
 # Debug: Print FFmpeg location and version
 RUN which ffmpeg && \
     ffmpeg -version && \
@@ -20,16 +25,17 @@ RUN ln -sf $(which ffmpeg) /usr/local/bin/ffmpeg && \
     echo "PATH=$PATH" && \
     ls -la /usr/local/bin/ffmpeg
 
-# Set environment variable for temp directory path
+# Set environment variables
 ENV N8N_TEMP_DIR=/home/node/tmp
-
-# Debug: Verify permissions as node user
-USER node
-RUN ffmpeg -version || echo "Failed to run ffmpeg as node user"
-
-# Additional debug: Print PATH and check FFmpeg accessibility
-RUN echo "Current PATH: $PATH" && \
-    which ffmpeg || echo "ffmpeg not in PATH"
-
-# Set the data directory to the persistent volume
 ENV N8N_USER_FOLDER=/home/node/.n8n
+ENV PORT=5678
+ENV N8N_ENFORCE_SETTINGS_FILE_PERMISSIONS=false
+
+# Switch to node user for security
+USER node
+
+# Debug: Verify setup
+RUN ffmpeg -version || echo "Failed to run ffmpeg as node user" && \
+    echo "Current PATH: $PATH" && \
+    which ffmpeg || echo "ffmpeg not in PATH" && \
+    ls -la /home/node/.n8n || echo "Cannot access .n8n directory"
