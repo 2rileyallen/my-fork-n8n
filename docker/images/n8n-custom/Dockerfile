@@ -7,7 +7,7 @@ USER root
 RUN apk update && \
     apk add --no-cache ffmpeg
 
-# Create necessary directories
+# Create necessary directories and set permissions
 RUN mkdir -p /mnt/n8n/workflows && \
     mkdir -p /mnt/n8n/temp && \
     chown -R node:node /mnt/n8n && \
@@ -28,13 +28,8 @@ ENV N8N_ENFORCE_SETTINGS_FILE_PERMISSIONS=false
 # Switch to node user for security
 USER node
 
-# Create symbolic link for backwards compatibility
-RUN mkdir -p /home/node/.n8n && \
-    ln -sf /mnt/n8n/workflows/* /home/node/.n8n/ || true
-
 # Debug: Verify setup
 RUN echo "Verifying directories and permissions:" && \
+    ls -la /mnt/n8n || echo "Cannot access /mnt/n8n" && \
     ls -la /mnt/n8n/workflows || echo "Cannot access workflows directory" && \
-    ls -la /mnt/n8n/temp || echo "Cannot access temp directory" && \
-    echo "FFmpeg version:" && \
-    ffmpeg -version
+    ls -la /mnt/n8n/temp || echo "Cannot access temp directory"
