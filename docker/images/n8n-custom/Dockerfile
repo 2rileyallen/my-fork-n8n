@@ -16,8 +16,8 @@ RUN mkdir -p /mnt/n8n && \
 RUN ln -sf $(which ffmpeg) /usr/local/bin/ffmpeg
 
 # Set environment variables
-ENV N8N_DATA_FOLDER=/mnt/n8n  # Set to the base directory for N8N data
-ENV N8N_TEMP_DIR=/mnt/n8n/temp  # Temporary directory for N8N
+ENV N8N_DATA_FOLDER=/mnt/n8n
+ENV N8N_TEMP_DIR=/mnt/n8n/temp
 ENV PORT=5678
 ENV N8N_PROTOCOL=https
 ENV N8N_HOST=api.thetunecanvas.com
