@@ -27,4 +27,6 @@ ENV N8N_ENFORCE_SETTINGS_FILE_PERMISSIONS=false
 # Debug: Verify setup
 RUN echo "Verifying directories and permissions:" && \
     ls -la /mnt/n8n || echo "Cannot access /mnt/n8n"
-		
+
+# Add the command to force N8N to use the specified data directory
+CMD ["n8n", "--data", "/mnt/n8n"]
